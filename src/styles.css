@@ -7,8 +7,9 @@
   --device:#1b1b1d;      /* matte black body */
   --device-edge:#050506;
   --screen:#090909;      /* OLED near-black */
-  --amber:#FFB020;       /* the only spark: the OLED glow */
-  --amber-deep:#d98e22;  /* amber for small marks on light */
+  --amber:#fe7f07;       /* brand orange (from the logo) — UI accent */
+  --amber-deep:#e06f08;  /* darker brand orange for small marks/hovers */
+  --glow:#FFB020;        /* OLED amber glow — device screen only */
   --maxw:1060px;
   --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -37,7 +38,7 @@ a{color:inherit}
 }
 .eyebrow::before{
   content:"";width:7px;height:7px;border-radius:2px;
-  background:var(--amber);box-shadow:0 0 8px rgba(255,176,32,.7);
+  background:var(--amber);box-shadow:0 0 8px rgba(254,127,7,.55);
   display:inline-block;
 }
 
@@ -58,12 +59,20 @@ header.bar{
   display:inline-block;margin-left:.28em;box-shadow:0 0 9px rgba(255,176,32,.8);
   transform:translateY(-1px);
 }
+.logo{height:26px;width:auto;display:block}
+footer .logo{height:24px}
 .bar nav{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;display:flex;gap:26px;align-items:center}
 .bar nav a{
   text-decoration:none;color:var(--ink);padding:.4em .1em;
   border-bottom:2px solid transparent;transition:border-color .18s;
 }
 .bar nav a:hover,.bar nav a:focus-visible{border-color:var(--amber-deep)}
+.bar nav .lang{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:.74rem;letter-spacing:.04em;color:var(--ink-2);background:none;
+  border:1px solid var(--line);border-radius:20px;padding:5px 10px;cursor:pointer;
+  transition:border-color .18s,color .18s}
+.bar nav .lang:hover,.bar nav .lang:focus-visible{color:var(--ink);border-color:var(--amber-deep);outline:none}
+.bar nav .lang svg{display:block}
 
 /* ---- hero ---- */
 .hero .wrap{
@@ -86,7 +95,7 @@ h1 .soft{color:var(--ink-2)}
   padding:.85em 1.4em;cursor:pointer;transition:transform .12s,box-shadow .18s;
   box-shadow:0 1px 0 rgba(0,0,0,.12);display:inline-block;
 }
-.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(217,142,34,.32)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(254,127,7,.3)}
 .btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
 .btn.ghost:hover{border-color:var(--ink)}
@@ -104,6 +113,8 @@ h1 .soft{color:var(--ink-2)}
     0 8px 22px -12px rgba(0,0,0,.4);
   border:1px solid var(--device-edge);
 }
+.device-logo{position:absolute;top:6%;left:50%;transform:translateX(-50%);
+  width:38%;height:auto;pointer-events:none}
 .device::before{ /* soft matte sheen */
   content:"";position:absolute;inset:0;border-radius:22px;
   background:radial-gradient(120% 60% at 30% 8%,rgba(255,255,255,.06),transparent 60%);
@@ -122,7 +133,7 @@ h1 .soft{color:var(--ink-2)}
 .screen{
   position:relative;background:var(--screen);border-radius:9px;
   aspect-ratio:128/64;padding:9px 11px;
-  font-family:var(--mono);color:var(--amber);
+  font-family:var(--mono);color:var(--glow);
   box-shadow:0 0 0 3px #060606,0 2px 10px rgba(0,0,0,.6) inset;
   display:flex;flex-direction:column;gap:6px;overflow:hidden;
   text-shadow:0 0 6px rgba(255,176,32,.45);
@@ -143,7 +154,7 @@ h1 .soft{color:var(--ink-2)}
   font-size:clamp(.56rem,2.7vw,.78rem);opacity:.95;
 }
 .screen .opts span{padding:0 2px;border-radius:2px;transition:background .12s,color .12s}
-.screen .opts span.sel{background:var(--amber);color:#0a0a0b;text-shadow:none}
+.screen .opts span.sel{background:var(--glow);color:#0a0a0b;text-shadow:none}
 .screen .caret{position:absolute;right:2px;bottom:0;font-size:.7rem;opacity:.65;transition:opacity .25s}
 .genretag{
   text-align:center;margin-top:14px;font-family:var(--mono);
@@ -170,7 +181,7 @@ h1 .soft{color:var(--ink-2)}
   transition:color .18s,text-shadow .18s}
 .arrow.u{top:-4%}.arrow.d{bottom:-4%}.arrow.l{left:-4%}.arrow.r{right:-4%}
 .stick.press{transform:scale(.84);box-shadow:0 1px 4px rgba(0,0,0,.7) inset}
-.screen .msel{color:#0a0a0b;background:var(--amber);border-radius:2px;padding:0 3px;text-shadow:none}
+.screen .msel{color:#0a0a0b;background:var(--glow);border-radius:2px;padding:0 3px;text-shadow:none}
 .screen .toast{display:block;text-align:center;margin-top:6px;letter-spacing:.1em}
 
 /* ---- sections ---- */
@@ -186,7 +197,7 @@ section{padding:clamp(56px,9vw,110px) 0}
 h2{font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.02em;line-height:1.08;margin:0;text-wrap:balance;font-weight:800}
 .sub{color:var(--ink-2);max-width:56ch;margin:1rem 0 0;font-size:1.06rem}
 
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:44px;
+.trio{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:44px;
   background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .cell{background:var(--ground);padding:30px 26px}
 .cell .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;color:var(--amber-deep);text-transform:uppercase}
@@ -207,6 +218,61 @@ h2{font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.02em;line-height:1.08;m
 .community-note{font-family:var(--mono);font-size:.8rem;letter-spacing:.03em;
   color:var(--ink-2);text-align:center;margin:34px auto 0;max-width:54ch}
 
+/* ---- how it works ---- */
+.steps{list-style:none;padding:0;margin:44px 0 0;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.steps li{background:var(--ground);padding:30px 26px}
+.steps .num{font-family:var(--mono);font-size:.9rem;letter-spacing:.1em;color:var(--amber-deep)}
+.steps h3{font-size:1.18rem;margin:.6rem 0 .4rem;letter-spacing:-.01em}
+.steps p{margin:0;color:var(--ink-2);font-size:.98rem}
+
+/* ---- specs ---- */
+.specs-sec{background:var(--ground-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.specs{margin-top:36px}
+.specs dl{margin:0;max-width:640px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--ground)}
+.specs dl > div{display:flex;justify-content:space-between;gap:20px;padding:15px 22px;border-bottom:1px solid var(--line)}
+.specs dl > div:last-child{border-bottom:0}
+.specs dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:0}
+.specs dd{margin:0;text-align:right;color:var(--ink);font-size:.98rem}
+
+/* ---- faq ---- */
+.faq{margin-top:36px;max-width:760px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.faq details{border-bottom:1px solid var(--line);background:var(--ground)}
+.faq details:last-child{border-bottom:0}
+.faq summary{cursor:pointer;padding:18px 22px;font-weight:700;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--amber-deep);font-size:1.2rem;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{margin:0;padding:0 22px 20px;color:var(--ink-2)}
+
+/* ---- discord cta ---- */
+.discord-cta{text-align:center;margin-top:24px}
+
+/* ---- studio teaser ---- */
+.studio-wrap{margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.studio-mock{width:100%;max-width:560px;background:#fbfaf7;border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;box-shadow:0 24px 44px -30px rgba(0,0,0,.4)}
+.studio-mock .bar{display:flex;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:#f1efe9}
+.studio-mock .bar span{width:10px;height:10px;border-radius:50%;background:#cfc9bd}
+.studio-mock .body{padding:20px}
+.studio-mock .node{border:1px solid var(--line);border-radius:9px;padding:14px 16px;background:#fff}
+.studio-mock .node-t{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-deep)}
+.studio-mock .node p{margin:.5rem 0 .8rem;color:var(--ink);font-size:.95rem}
+.studio-mock .choices{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.8rem;color:var(--ink-2)}
+.studio-mock .branch{display:flex;gap:12px;justify-content:center;margin-top:14px}
+.studio-mock .pill{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);
+  border:1px dashed var(--line);border-radius:20px;padding:5px 12px}
+
+/* ---- example stories ---- */
+.examples-sec{background:var(--ground-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.examples{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:40px;
+  background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.examples .ex{background:var(--ground);padding:26px}
+.examples .ex .g{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-deep)}
+.examples .ex h3{font-size:1.2rem;margin:.5rem 0 .4rem;letter-spacing:-.01em}
+.examples .ex p{margin:0;color:var(--ink-2);font-size:.96rem}
+
 /* ---- waitlist ---- */
 .signup{text-align:center}
 .signup h2{margin-bottom:0}
@@ -222,14 +288,23 @@ form.wl input:focus-visible{outline:3px solid var(--amber);outline-offset:1px;bo
 .done b{color:var(--amber-deep)}
 
 footer{border-top:1px solid var(--line);padding:36px 0}
-footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-footer .note{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);letter-spacing:.03em}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+footer .note{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);letter-spacing:.03em;margin:.5rem 0 0}
+footer .foot-slogan{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-2);margin:.6rem 0 0}
+footer .foot-slogan .accent{color:var(--amber-deep)}
+footer .foot-links{display:flex;gap:22px;font-family:var(--mono);font-size:.78rem}
+footer .foot-links a{color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent;
+  transition:border-color .18s,color .18s;padding-bottom:2px}
+footer .foot-links a:hover,footer .foot-links a:focus-visible{color:var(--ink);border-color:var(--amber-deep)}
 
 @media (max-width:820px){
   .hero .wrap{grid-template-columns:1fr;gap:40px}
   .hero .copy{order:1}.stage{order:2}
   .trio{grid-template-columns:1fr}
   .layers .cols{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .examples{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){
   .btn:hover{transform:none}

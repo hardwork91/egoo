@@ -1,30 +1,41 @@
 import { useEffect } from 'react'
+import { useLocale } from './i18n.jsx'
 
-// A scripted playthrough with save/load beats. Node lengths vary so the scroll
-// count varies (0..3); choices are random (left/right). UI is placeholder — the
-// device UI will change soon, so this component stays self-contained.
-const nodes = [
-  {
-    lines: ['Una nave mercante', 'flota inerte ante ti.', 'No responde nadie.'],
-    a: '‹ Ignorar', b: 'Abordar ›',
+// Contenido de la demo del device, por idioma. Node lengths vary so the scroll
+// count varies (0..3); choices are random. Menús/toasts también traducidos.
+const DEMO = {
+  en: {
+    nodes: [
+      { lines: ['A merchant ship drifts,', 'silent, off the bow.', 'Nobody answers.'], a: '‹ Ignore', b: 'Board ›' },
+      { lines: ['Inside, the air is', 'cold and very still.', 'A door glows faint', 'amber, further in.', 'You hear breathing', "that isn't yours."], a: '‹ Back', b: 'Open ›' },
+      { lines: ['The room is empty —', 'but for a small', 'music box turning', 'slowly on the floor.', 'It plays a song', 'you half-remember,', 'the one your mother', 'hummed, a lifetime', 'and a galaxy ago.'], a: '‹ Leave it', b: 'Take it ›' },
+      { lines: ['The box grows warm.', 'The song swells and', 'the walls fall away.', "You're small again —", 'home, safe. The ship', 'is just a dream you', 'once had, on a long', 'and quiet night.', 'A voice says your', 'name. You could stay.', 'Stay forever.'], a: '‹ Wake up', b: 'Stay ›' },
+    ],
+    items: ['Resume', 'Save', 'Load'],
+    back: '‹ back', select: 'select ›',
+    save: 'SAVED&nbsp;✓<br>slot&nbsp;2', load: 'LOADING…<br>slot&nbsp;2',
   },
-  {
-    lines: ['Dentro, el aire está', 'frío y muy quieto.', 'Una puerta brilla', 'ámbar, más allá.', 'Oyes una respiración', 'que no es la tuya.'],
-    a: '‹ Atrás', b: 'Abrir ›',
+  es: {
+    nodes: [
+      { lines: ['Una nave mercante', 'flota inerte ante ti.', 'No responde nadie.'], a: '‹ Ignorar', b: 'Abordar ›' },
+      { lines: ['Dentro, el aire está', 'frío y muy quieto.', 'Una puerta brilla', 'ámbar, más allá.', 'Oyes una respiración', 'que no es la tuya.'], a: '‹ Atrás', b: 'Abrir ›' },
+      { lines: ['La sala está vacía —', 'salvo una cajita', 'de música que gira', 'despacio en el suelo.', 'Suena una canción', 'que casi recuerdas,', 'la que tarareaba', 'tu madre, hace una', 'vida y una galaxia.'], a: '‹ Dejarla', b: 'Tomarla ›' },
+      { lines: ['La caja se entibia.', 'La canción crece y', 'las paredes se van.', 'Vuelves a ser niño —', 'en casa, a salvo. La', 'nave es solo un sueño', 'que tuviste una vez,', 'en una noche larga', 'y callada. Una voz', 'dice tu nombre.', 'Podrías quedarte.', 'Para siempre.'], a: '‹ Despertar', b: 'Quedarme ›' },
+    ],
+    items: ['Seguir', 'Guardar', 'Cargar'],
+    back: '‹ atrás', select: 'elegir ›',
+    save: 'GUARDADO&nbsp;✓<br>ranura&nbsp;2', load: 'CARGANDO…<br>ranura&nbsp;2',
   },
-  {
-    lines: ['La sala está vacía —', 'salvo una cajita', 'de música que gira', 'despacio en el suelo.', 'Suena una canción', 'que casi recuerdas,', 'la que tarareaba', 'tu madre, hace una', 'vida y una galaxia.'],
-    a: '‹ Dejarla', b: 'Tomarla ›',
-  },
-  {
-    lines: ['La caja se entibia.', 'La canción crece y', 'las paredes se van.', 'Vuelves a ser niño —', 'en casa, a salvo. La', 'nave es solo un sueño', 'que tuviste una vez,', 'en una noche larga', 'y callada. Una voz', 'dice tu nombre.', 'Podrías quedarte.', 'Para siempre.'],
-    a: '‹ Despertar', b: 'Quedarme ›',
-  },
-]
+}
 
 export default function DeviceDemo() {
+  const { locale } = useLocale()
+  const data = DEMO[locale] || DEMO.en
+
   useEffect(() => {
     let cancelled = false
+    const L = DEMO[locale] || DEMO.en
+    const nodes = L.nodes
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches
     const story = document.getElementById('story')
     const caret = document.getElementById('caret')
@@ -77,7 +88,7 @@ export default function DeviceDemo() {
     }
 
     async function menu(action) { // 'save' | 'load'
-      const items = ['Seguir', 'Guardar', 'Cargar']
+      const items = L.items
       const target = action === 'save' ? 1 : 2
       const draw = (sel) => {
         let h = ''
@@ -87,7 +98,7 @@ export default function DeviceDemo() {
       }
       story.style.transform = 'translateY(0)'; story.style.opacity = '1'; caret.style.opacity = '0'
       await press(); if (cancelled) return
-      optA.textContent = '‹ atrás'; optB.textContent = 'elegir ›'
+      optA.textContent = L.back; optB.textContent = L.select
       optA.classList.remove('sel'); optB.classList.remove('sel')
       draw(0); await sleep(850); if (cancelled) return
       for (let k = 0; k < target; k++) {
@@ -97,7 +108,7 @@ export default function DeviceDemo() {
         draw(k + 1); await sleep(480); if (cancelled) return
       }
       optB.classList.add('sel'); await press(); if (cancelled) return; optB.classList.remove('sel')
-      story.innerHTML = '<span class="toast">' + (action === 'save' ? 'GUARDADO&nbsp;✓<br>ranura&nbsp;2' : 'CARGANDO…<br>ranura&nbsp;2') + '</span>'
+      story.innerHTML = '<span class="toast">' + (action === 'save' ? L.save : L.load) + '</span>'
       await sleep(1150); if (cancelled) return
       story.style.opacity = '0'; await sleep(340)
     }
@@ -119,18 +130,15 @@ export default function DeviceDemo() {
 
     if (reduce) render(nodes[0]); else loop()
     return () => { cancelled = true }
-  }, [])
+  }, [locale])
 
   return (
     <div className="stage">
       <div>
-        <div
-          className="device"
-          role="img"
-          aria-label="Un pequeño cacharro negro mate con pantalla ámbar que muestra una historia y dos opciones."
-        >
+        <div className="device" role="img" aria-label="egoo">
           <span className="screw tl" /><span className="screw tr" />
           <span className="screw bl" /><span className="screw br" />
+          <img className="device-logo" src="/egoo/logo-white.svg" alt="" aria-hidden="true" />
           <div className="screen">
             <div className="statbar">
               <span>1</span><span className="bars">▮▮▮ 0 ▮▮▮</span><span>1</span>
@@ -140,7 +148,7 @@ export default function DeviceDemo() {
               <span className="caret" id="caret">▾</span>
             </div>
             <div className="opts">
-              <span id="optA">‹ Ignorar</span><span id="optB">Abordar ›</span>
+              <span id="optA">{data.nodes[0].a}</span><span id="optB">{data.nodes[0].b}</span>
             </div>
           </div>
           <div className="padwrap" aria-hidden="true">
@@ -151,7 +159,6 @@ export default function DeviceDemo() {
             <span className="stick" id="stick" />
           </div>
         </div>
-        <div className="genretag" id="cap">se juega solo · sin manos</div>
       </div>
     </div>
   )
