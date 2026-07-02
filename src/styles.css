@@ -76,7 +76,7 @@ footer .logo{height:24px}
 
 /* ---- hero ---- */
 .hero .wrap{
-  display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:start;
   padding:clamp(48px,8vw,104px) 24px;
 }
 h1{
